@@ -82,7 +82,7 @@ def get_translation_history(
         .all()
     )
 
-@router.post("/translate/file")
+@router.post("/file")
 async def translate_file(
     file: UploadFile = File(...),
     target_lang: str = Form(...),
@@ -130,3 +130,26 @@ async def translate_file(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.delete("/history/{history_id}")
+def delete_translation_history(
+    history_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    item = (
+        db.query(models.TranslationHistory)
+        .filter(
+            models.TranslationHistory.id == history_id,
+            models.TranslationHistory.user_id == current_user.id
+        )
+        .first()
+    )
+
+    if not item:
+        raise HTTPException(status_code=404, detail="History not found")
+
+    db.delete(item)
+    db.commit()
+
+    return {"success": True}

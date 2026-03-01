@@ -36,7 +36,7 @@ const Login = () => {
 
     return (
         <div className="flex items-center justify-center min-vh-100 animate-fade-in" style={{ minHeight: '100vh', display: 'flex' }}>
-            <div className="glass-panel" style={{ width: '100%', maxWidth: '400px', padding: '40px' }}>
+            <div className="glass-panel" style={{ width: '100%', maxWidth: '500px', padding: '40px' }}>
                 <div style={{ textAlign: 'center', marginBottom: '30px' }}>
                     <div style={{ display: 'inline-flex', padding: '16px', borderRadius: 'var(--radius-full)', background: 'rgba(99, 102, 241, 0.1)', marginBottom: '16px' }}>
                         <LogIn size={32} color="var(--accent-primary)" />
@@ -94,7 +94,44 @@ const Login = () => {
                 <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
                     Don't have an account? <Link to="/register" style={{ color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: '500' }}>Sign up now</Link>
                 </div>
+                
             </div>
+
+            {/* Right side */}
+            <div
+        style={{
+          width: "70%",
+        //   background: "linear-gradient(135deg,#020617,#0f172a)",
+          padding: "48px",
+          boxSizing: "border-box",
+          overflowY: "auto",
+          alignContent: "space-between",
+          marginLeft: "200px" 
+        }}
+      >
+        <h1 style={{  letterSpacing: '0.5px', marginTop: 200 }}>Welcome to
+                    <span className="text-gradient" style={{  letterSpacing: '0.5px' }}>  Offline IntelliExtract</span>
+                </h1>
+
+        <p style={{ maxWidth: "700px", lineHeight: 1.7, color: "#cbd5f5" }}>
+          Create an account to start using offline OCR and local neural
+          translation with complete data privacy.
+        </p>
+
+        <ul
+          style={{
+            marginTop: "24px",
+            lineHeight: 2,
+            color: "#94a3b8"
+          }}
+        >
+          <li>✔ Image, PDF and document OCR</li>
+          <li>✔ Local neural translation</li>
+          <li>✔ Downloadable activity history</li>
+          <li>✔ Fully offline processing</li>
+        </ul>
+      </div>
+  
         </div>
     );
 };

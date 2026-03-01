@@ -4,6 +4,7 @@ import OCRTool from '../components/OCRTool';
 import TranslationTool from '../components/TranslationTool';
 import HistoryPanel from '../components/HistoryPanel';
 
+
 const Dashboard = () => {
     const [ocrHistory, setOcrHistory] = useState([]);
     const [translationHistory, setTranslationHistory] = useState([]);
@@ -40,14 +41,16 @@ const Dashboard = () => {
     }, [fetchHistory]);
 
     return (
-        <div style={{
-            display: 'flex',
-            padding: '24px 40px',
-            gap: '30px',
-            minHeight: 'calc(100vh - 80px)',
-            flexDirection: 'row',
-            flexWrap: 'wrap'
-        }}>
+        <div
+  style={{
+    display: "flex",
+    padding: "24px 40px",
+    gap: "30px",
+
+    height: "calc(100vh - 80px)",   // ✅ fixed height
+    overflow: "hidden",            // ✅ prevent whole page scroll
+  }}
+>
             {/* Left Main Work Area (70%) */}
             <div style={{ flex: '1 1 70%', minWidth: '600px', display: 'flex', flexDirection: 'column', gap: '30px' }}>
                 

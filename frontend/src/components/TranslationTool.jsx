@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import api from "../api";
 import { Languages, ArrowRightLeft, Download, Loader2, Upload } from "lucide-react";
 
@@ -27,7 +27,7 @@ const SOURCE_LANGUAGES = [
   ...LANGUAGES
 ];
 
-const TranslationTool = ({ onNewHistory }) => {
+const TranslationTool = ({ onNewHistory, restoreItem }) => {
 
   const [inputType, setInputType] = useState("text");
   const [sourceText, setSourceText] = useState("");
@@ -41,6 +41,19 @@ const TranslationTool = ({ onNewHistory }) => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+  if (!restoreItem) return;
+
+  // only restore if this history item is for translation
+  if (restoreItem.type !== "translation") return;
+
+  setSourceText(restoreItem.original_text || "");
+  setSourceLang(restoreItem.source_language || "");
+  setTargetLang(restoreItem.target_language || "");
+  setTargetText(restoreItem.translated_text || "");
+
+}, [restoreItem]);
 
   /* ------------------------------
       Translate TEXT
@@ -96,14 +109,12 @@ const TranslationTool = ({ onNewHistory }) => {
 
     try {
       const form = new FormData();
+form.append("file", file);
+form.append("target_lang", targetLang);   // ← must match backend
 
-      form.append("file", file);
-      form.append("source_language", sourceLang);
-      form.append("target_language", targetLang);
-
-      const res = await api.post("/translate/translate/file", form, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
+const res = await api.post("/translate/file", form, {
+  headers: { "Content-Type": "multipart/form-data" }
+});
 
       setTargetText(res.data.translated_text);
 

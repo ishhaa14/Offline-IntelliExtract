@@ -48,3 +48,41 @@ async def extract_text(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/history")
+def get_ocr_history(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    items = (
+        db.query(models.OCRHistory)
+        .filter(models.OCRHistory.user_id == current_user.id)
+        .order_by(models.OCRHistory.created_at.desc())
+        .all()
+    )
+
+    return items
+
+@router.delete("/history/{history_id}")
+def delete_ocr_history(
+    history_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    item = (
+        db.query(models.OCRHistory)
+        .filter(
+            models.OCRHistory.id == history_id,
+            models.OCRHistory.user_id == current_user.id
+        )
+        .first()
+    )
+
+    if not item:
+        raise HTTPException(status_code=404, detail="History not found")
+
+    db.delete(item)
+    db.commit()
+
+    return {"success": True}

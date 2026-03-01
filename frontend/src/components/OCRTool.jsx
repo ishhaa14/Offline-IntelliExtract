@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect } from 'react';
 import api from '../api';
 import { Upload, FileText, Download, Loader2 } from 'lucide-react';
 
-const OCRTool = ({ onNewHistory }) => {
+const OCRTool = ({ onNewHistory, restoreItem }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [extractedText, setExtractedText] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    useEffect(() => {
+  if (!restoreItem) return;
+
+  // only restore if this history item is for OCR
+  if (restoreItem.type !== "ocr") return;
+
+  setExtractedText(restoreItem.extracted_text || "");
+
+}, [restoreItem]);
 
     const handleFileChange = (e) => {
         setSelectedFile(e.target.files[0]);
