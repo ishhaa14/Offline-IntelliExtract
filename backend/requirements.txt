@@ -9,3 +9,4 @@ pytesseract
 transformers
 torch
 Pillow
+email-validator
