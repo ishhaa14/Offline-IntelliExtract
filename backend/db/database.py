@@ -1,9 +1,14 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Database Configuration (PostgreSQL)
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:1234@localhost:5432/offline_ocr_db"
+# Reads from env var when running in Docker, falls back to local dev URL
+SQLALCHEMY_DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql://postgres:1234@localhost:5432/offline_ocr_db"
+)
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
