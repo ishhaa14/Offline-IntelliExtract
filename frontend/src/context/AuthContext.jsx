@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 
 const AuthContext = createContext(null);
 
@@ -7,22 +7,16 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const token = localStorage.getItem("token");
-
   useEffect(() => {
     const loadUser = async () => {
+      const token = localStorage.getItem("token");
       if (!token) {
         setLoading(false);
         return;
       }
 
       try {
-        const res = await axios.get("http://127.0.0.1:8000/auth/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
+        const res = await api.get("/auth/me");
         setUser(res.data);
       } catch (err) {
         console.error("Auth load failed");
@@ -36,25 +30,21 @@ export function AuthProvider({ children }) {
     loadUser();
   }, []);
 
+  const register = async (username, email, password) => {
+    const res = await api.post("/auth/register", { username, email, password });
+    return res.data;
+  };
+
   const login = async (username, password) => {
     const form = new FormData();
     form.append("username", username);
     form.append("password", password);
 
-    const res = await axios.post(
-      "http://127.0.0.1:8000/auth/login",
-      form
-    );
-
+    const res = await api.post("/auth/login", form);
     const accessToken = res.data.access_token;
     localStorage.setItem("token", accessToken);
 
-    const me = await axios.get("http://127.0.0.1:8000/auth/me", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
+    const me = await api.get("/auth/me");
     setUser(me.data);
   };
 
@@ -65,6 +55,7 @@ export function AuthProvider({ children }) {
 
   const value = {
     user,
+    register,
     login,
     logout,
     loading,

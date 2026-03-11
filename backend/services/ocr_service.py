@@ -1,14 +1,19 @@
 import io
+import os
 from PIL import Image
 import pytesseract
 from pdf2image import convert_from_bytes
 
 
-# IMPORTANT (Windows – your case)
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+# In Docker (Linux): tesseract is installed via apt, so no path needed (None).
+# On Windows locally: set TESSERACT_CMD env var, or it falls back to the default Windows path.
+TESSERACT_CMD = os.getenv("TESSERACT_CMD", r"C:\Program Files\Tesseract-OCR\tesseract.exe")
+if TESSERACT_CMD:
+    pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
 
-# If poppler is not in PATH, set this too:
-POPPLER_PATH = r"C:\Program Files\poppler-25.12.0\Library\bin"
+# In Docker (Linux): poppler is installed via apt and in PATH, so None is fine.
+# On Windows locally: set POPPLER_PATH env var, or it falls back to the default.
+POPPLER_PATH = os.getenv("POPPLER_PATH", r"C:\Program Files\poppler-25.12.0\Library\bin") or None
 
 
 def extract_text_from_file(file_bytes: bytes, content_type: str) -> str:
