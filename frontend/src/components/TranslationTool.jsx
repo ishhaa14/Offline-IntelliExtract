@@ -165,7 +165,16 @@ const res = await api.post("/translate/file", form, {
       : LANGUAGES;
 
   return (
-    <div className="glass-panel" style={{ padding: 24, flex: 1, display: "flex", flexDirection: "column" }}>
+    <div
+  className="glass-panel"
+  style={{
+    padding: 24,
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    overflowY: "auto"
+  }}
+>
 
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
